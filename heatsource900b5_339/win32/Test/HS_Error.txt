@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 225, in RunHS
+    HSP = ModelControl(inputdir, control_file)
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 68, in __init__
+    self.HS = CSVInterface(inputdir, control_file, self.ErrLog, run_type)
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 64, in __init__
+    else: self.BuildZonesNormal()
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 925, in BuildZonesNormal
+    RE = -log(1-Vdens)/10
+ValueError: math domain error
