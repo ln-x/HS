@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 226, in RunHS
+    HSP.Run()
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 139, in Run
+    self.run_all(time, hour, minute, second, JD, JDC)
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 204, in run_hs
+    [x.CalcDischarge(time) for x in self.reachlist]
+  File "C:\Python27\lib\site-packages\heatsource900\Stream\StreamNode.py", line 164, in CalcDischarge_Opt
+    self.Q, up.Q, up.Q_prev, inputs, -1)
+  File "C:\Python27\lib\site-packages\heatsource900\Stream\PyHeatsource.py", line 199, in CalcFlows
+    C = CalcMuskingum(Q2, U, W_w, S, dx, dt)
+  File "C:\Python27\lib\site-packages\heatsource900\Stream\PyHeatsource.py", line 183, in CalcMuskingum
+    raise Exception("Unstable timestep. K=%0.3f, X=%0.3f, tests=(%0.3f, %0.3f)" % (K,X,test0,test1))
+NameError: global name 'test0' is not defined

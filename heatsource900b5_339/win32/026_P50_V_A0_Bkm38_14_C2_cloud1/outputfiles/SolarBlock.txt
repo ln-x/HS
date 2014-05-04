@@ -1,0 +1,7 @@
+Heat Source 9.0.0b5 hourly output file.  File created on Sun May 04 19:16:15 2014
+026_P50_V_A0_Bkm38_14_C2_cloud1
+This is an example of user text.
+
+Output: Solar Flux blocked by LULC (w/sq m)
+
+Datetime      rKM           Veg_1_NE      Veg_2_NE      Veg_3_NE      Veg_4_NE      Veg_5_NE      Veg_6_NE      Veg_7_NE      Veg_8_NE      Veg_9_NE      Veg_1_E       Veg_2_E       Veg_3_E       Veg_4_E       Veg_5_E       Veg_6_E       Veg_7_E       Veg_8_E       Veg_9_E       Veg_1_SE      Veg_2_SE      Veg_3_SE      Veg_4_SE      Veg_5_SE      Veg_6_SE      Veg_7_SE      Veg_8_SE      Veg_9_SE      Veg_1_S       Veg_2_S       Veg_3_S       Veg_4_S       Veg_5_S       Veg_6_S       Veg_7_S       Veg_8_S       Veg_9_S       Veg_1_SW      Veg_2_SW      Veg_3_SW      Veg_4_SW      Veg_5_SW      Veg_6_SW      Veg_7_SW      Veg_8_SW      Veg_9_SW      Veg_1_W       Veg_2_W       Veg_3_W       Veg_4_W       Veg_5_W       Veg_6_W       Veg_7_W       Veg_8_W       Veg_9_W       Veg_1_NW      Veg_2_NW      Veg_3_NW      Veg_4_NW      Veg_5_NW      Veg_6_NW      Veg_7_NW      Veg_8_NW      Veg_9_NW      diffuse_blocked
