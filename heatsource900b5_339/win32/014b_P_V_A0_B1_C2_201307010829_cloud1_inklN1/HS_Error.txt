@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 225, in RunHS
+    HSP = ModelControl(inputdir, control_file)
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 68, in __init__
+    self.HS = CSVInterface(inputdir, control_file, self.ErrLog, run_type)
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 49, in __init__
+    self.ReadControlFile(inputdir, control_file)
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 199, in ReadControlFile
+    self.log.SetFile(normpath(join(IniParams["outputdir"],"outfile.log")))
+  File "C:\Python27\lib\site-packages\heatsource900\Utils\Logger.py", line 31, in SetFile
+    raise IOError("Opening output directory failed. Make sure directory exists before running.")
+IOError: Opening output directory failed. Make sure directory exists before running.
