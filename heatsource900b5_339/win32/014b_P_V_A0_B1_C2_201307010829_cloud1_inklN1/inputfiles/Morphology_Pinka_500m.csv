@@ -1,5 +1,4 @@
 Stream_KM,Elevation,Gradient,BottomWidth,ChannelAngleZ ,Mannings_n,SedThermalConductivity,SedThermalDiffusivity,SedHyporheicThickness,%HyporheicExchange,Porosity
-93.5,722,0.046,2.5,0.15,0.04,2,0.0064,0.1,0.01,0.2
 93,704,0.036,1.5,0.5,0.04,2,0.0064,0.1,0.01,0.3
 92.5,689,0.03,1.5,0.15,1,2,0.0064,0.1,0.01,0.4
 92,668,0.042,1.5,0.15,1,2,0.0064,0.1,0.01,0.4
