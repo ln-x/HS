@@ -3,24 +3,8 @@ Traceback (most recent call last):
     HSP = ModelControl(inputdir, control_file)
   File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 68, in __init__
     self.HS = CSVInterface(inputdir, control_file, self.ErrLog, run_type)
-  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 62, in __init__
-    self.BuildNodes()
-  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 782, in BuildNodes
-    data = self.GetColumnarData()
-  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 725, in GetColumnarData
-    morphdata = pd.read_csv(join(IniParams["inputdir"],IniParams["morphfile"]),quotechar='"',quoting=0,index_col='Stream_KM')
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 400, in parser_f
-    return _read(filepath_or_buffer, kwds)
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 205, in _read
-    return parser.read()
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 608, in read
-    ret = self._engine.read(nrows)
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 1081, in read
-    index, names = self._make_index(data, alldata, names)
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 761, in _make_index
-    index = self._get_simple_index(alldata, columns)
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 795, in _get_simple_index
-    i = ix(idx)
-  File "C:\Python27\lib\site-packages\pandas\io\parsers.py", line 789, in ix
-    raise ValueError('Index %s invalid' % col)
-ValueError: Index Stream_KM invalid
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 68, in __init__
+    self.OrientNodes()
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 332, in OrientNodes
+    raise Exception ("The following reaches have zero slope. Kilometers: %s" %",".join(['%0.3f'%i for i in slope_problems]))
+Exception: The following reaches have zero slope. Kilometers: 70.000,62.000,51.500
