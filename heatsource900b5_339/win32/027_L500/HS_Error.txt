@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 225, in RunHS
-    HSP = ModelControl(inputdir, control_file)
-  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 68, in __init__
-    self.HS = CSVInterface(inputdir, control_file, self.ErrLog, run_type)
-  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 68, in __init__
-    self.OrientNodes()
-  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 332, in OrientNodes
-    raise Exception ("The following reaches have zero slope. Kilometers: %s" %",".join(['%0.3f'%i for i in slope_problems]))
-Exception: The following reaches have zero slope. Kilometers: 70.000,62.000,51.500
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 237, in RunSH
+    HSP.Run()
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 163, in Run
+    self.Output(time, hour)
+  File "C:\Python27\lib\site-packages\heatsource900\Utils\Output.py", line 166, in __call__
+    self.write(self.run_type < 2, timestamp)
+  File "C:\Python27\lib\site-packages\heatsource900\Utils\Output.py", line 202, in write
+    daily_ave_blocked = x.Solar_Blocked[dir][zone] / timesteps
+KeyError: 2
