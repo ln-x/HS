@@ -44,8 +44,15 @@ class Output(object):
             desc["Heat_Conv"] = "Convection Flux (w/sq m)"
             desc["Heat_Evap"] = "Evaporation Flux (w/sq m)"
             desc["Heat_SR1"] = "Potential Solar Radiation Flux (w/sq m)"
+            desc["Heat_SR2"] = "Above Landcover: Solar Radiation Flux (w/sq m)"
+            desc["Heat_SR3"] = "Above Bank Shade: Solar Radiation Flux (w/sq m)"
             desc["Heat_SR4"] = "Surface Solar Radiation Flux (w/sq m)"
+            desc["Heat_SR5"] = "Entering Stream: Solar Radiation Flux (w/sq m)"
             desc["Heat_SR6"] = "Received Solar Radiation Flux (w/sq m)"
+            desc["Heat_SR7"] = "Entering Bed: Solar Radiation Flux (w/sq m)"
+            desc["Heat_LW_Atm"]= "Atmospheric Longwave Radiation Flux (w/sq m)"
+            desc["Heat_LW_Veg"]= "Vegetation Longwave Radiation Flux (w/sq m)"
+            desc["Heat_LW_Stream"]= "Stream Longwave Radiation Flux (w/sq m)"
             desc["Heat_TR"] = "Thermal Radiation Flux (w/sq m)"
             desc["Shade"] = "Effective Shade"
             desc["VTS"] = "View to Sky"
@@ -59,6 +66,7 @@ class Output(object):
             desc["Hyd_WT"] = "Top Width (m)"
         if not run_type:
             desc["Rate_Evap"] = "Evaporation Rate (mm/hr)"
+            desc["Temp_prev"] = "Temp_prev - Watertemp of previous timestep?"
             desc["Temp_H2O"] = "Stream Temperature (*C)"
             desc["Temp_Sed"] = "Sediment Temperature (*C)"
             desc["Hyd_Disp"] = "Hydraulic Dispersion (m2/s)"
@@ -129,9 +137,17 @@ class Output(object):
             data["Heat_Cond"][timestamp] = [x.F_Conduction for x in nodes]
             data["Heat_Conv"][timestamp] = [x.F_Convection for x in nodes]
             data["Heat_Evap"][timestamp] = [x.F_Evaporation for x in nodes]
+            #data["Cloudiness"][timestamp] = [x.F_cloud for x in nodes]
             data["Heat_SR1"][timestamp] = [x.F_Solar[1] for x in nodes]
+            data["Heat_SR2"][timestamp] = [x.F_Solar[2] for x in nodes]
+            data["Heat_SR3"][timestamp] = [x.F_Solar[3] for x in nodes]
             data["Heat_SR4"][timestamp] = [x.F_Solar[4] for x in nodes]
+            data["Heat_SR5"][timestamp] = [x.F_Solar[5] for x in nodes]
             data["Heat_SR6"][timestamp] = [x.F_Solar[6] for x in nodes]
+            data["Heat_SR7"][timestamp] = [x.F_Solar[7] for x in nodes]
+            data["Heat_LW_Atm"][timestamp] = [x.F_LW_Atm for x in nodes]
+            data["Heat_LW_Veg"][timestamp] = [x.F_LW_Veg for x in nodes]
+            data["Heat_LW_Stream"][timestamp] = [x.F_LW_Stream for x in nodes]
             data["Heat_TR"][timestamp] = [x.F_Longwave for x in nodes]
         # Run only with hydro
         if self.run_type != 1:
@@ -144,6 +160,7 @@ class Output(object):
         # Run only with both solar and hydro
         if not self.run_type:
             data["Rate_Evap"][timestamp] = [(x.E / x.dx / x.W_w * 3600 * 1000) for x in nodes] #TODO: Check
+            data["Temp_prev"][timestamp] = [x.T_prev for x in nodes]
             data["Temp_H2O"][timestamp] = [x.T for x in nodes]
             data["Temp_Sed"][timestamp] = [x.T_sed for x in nodes]
             data["Hyd_Disp"][timestamp] = [x.Disp for x in nodes]
@@ -187,7 +204,8 @@ class Output(object):
                     for x in self.nodes:
                         line += timestamp
                         line += ("%0.3f" % x.km).ljust(14)
-                        for dir in range(7):  #Seven directions
+                        #for dir in range(7):  #Seven directions
+                        for dir in range(2):  #Two directions
                             for zone in range(IniParams["transsample_count"]):
                                 daily_ave_blocked = x.Solar_Blocked[dir][zone] / timesteps
                                 line += ("%0.4f" % daily_ave_blocked).ljust(14)

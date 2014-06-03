@@ -547,22 +547,26 @@ class CSVInterface(object):
         print("Reading Continuous Data")
 
         timelist = self.continuoustimelist
-        
+
+        #print (timelist) #ok: von 1.Juli 2013 1h .. bis 29.Aug.2013
+
         climatefiles = IniParams["contfiles"].split(",")
-        #print (climatefiles)
+
         climatedata = pd.DataFrame()
+
         for file in climatefiles:
             print (file)
             newfile = pd.read_csv(join(IniParams["inputdir"],file.strip()),quotechar='"', quoting=0, index_col='DateTime')
-            climatedata = pd.concat([climatedata,newfile],axis=1)
+            #print (climatedata.values) # anfangs leer, wird im Laufe der for Schleife befuellt
+            #print (newfile.values) # Hurray hier wird richtig eingelesen
+            climatedata = pd.concat([climatedata,newfile],axis=0) #TODO: Achtung hier war urspruenglich axis=1
+            #print (climatedata.values)  # Fehler mit vertauschten Zeitpunkten auch hier schon
 
-        #climatedata.convert_objects(convert_numeric=True).dtypes
-        #climatedata.astype('float64').dtype
-
-        #print (climatedata.info())
-        #print (type(climatedata))
+        #print (climatedata) # class pandas.core.frame.DataFrame float64(16columns) 1441 entries
+        #print (climatedata.values) # Fehler mit vertauschten Zeitpunkten auch hier schon
 
         data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata.values]
+        #print (type(data), data ) # list
 
         # Get a tuple of kilometers to use as keys to the location of each climate node
         kms = self.GetLocations("contkm") 
@@ -574,9 +578,9 @@ class CSVInterface(object):
             c = count()
             ##print ("sorted(self.Reach.keys()=",sorted(self.Reach.keys()))
             ##print ("len(self.Reach.keys()=",len(self.Reach.keys()))
-            ##print (line)
+            print (line)
             #for cloud, wind, humid, air in line:
-            for glorad, wind, humid, air in line:
+            for air, glorad, humid, wind in line:  #TODO: Achtung Reihenfolge geaendert
                 i = c.next()
                 #print (i)
                 #print ("self.Reach[kms]=",self.Reach[kms[0]],self.Reach[kms[1]])
@@ -801,6 +805,7 @@ class CSVInterface(object):
             node = StreamNode(run_type=self.run_type,Q_mb=Q_mb)
             print (data["km"])
             for k,v in data.iteritems():
+                #print (k)
                 setattr(node,k,v[i+1])# Add one to ignore boundary node
             self.InitializeNode(node)
             self.Reach[node.km] = node

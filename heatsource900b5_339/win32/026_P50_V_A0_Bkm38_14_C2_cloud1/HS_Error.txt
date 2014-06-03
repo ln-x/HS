@@ -1,10 +1,10 @@
 Traceback (most recent call last):
-  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 237, in RunSH
-    HSP.Run()
-  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 163, in Run
-    self.Output(time, hour)
-  File "C:\Python27\lib\site-packages\heatsource900\Utils\Output.py", line 156, in __call__
-    self.write(self.run_type < 2, timestamp)
-  File "C:\Python27\lib\site-packages\heatsource900\Utils\Output.py", line 192, in write
-    daily_ave_blocked = x.Solar_Blocked[dir][zone] / timesteps
-KeyError: 2
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 225, in RunHS
+    HSP = ModelControl(inputdir, control_file)
+  File "C:\Python27\lib\site-packages\heatsource900\BigRedButton.py", line 68, in __init__
+    self.HS = CSVInterface(inputdir, control_file, self.ErrLog, run_type)
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 66, in __init__
+    self.GetContinuousData()
+  File "C:\Python27\lib\site-packages\heatsource900\CSV\CSVInterface.py", line 612, in GetContinuousData
+    "types glorad, wind, humid, air = " % `humid`, type(glorad), type(wind), type(humid), type(air))
+Exception: ("Humidity value of '1.00402225' in Continuous Data) must be greater than zero and less than one. types glorad, wind, humid, air = ", <type 'numpy.float64'>, <type 'numpy.float64'>, <type 'numpy.float64'>, <type 'numpy.float64'>)

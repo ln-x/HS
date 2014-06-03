@@ -550,9 +550,12 @@ class CSVInterface(object):
         climatefiles = IniParams["contfiles"].split(",")
         climatedata = pd.DataFrame()
         for file in climatefiles:
+            print (file)
             newfile = pd.read_csv(join(IniParams["inputdir"],file.strip()),quotechar='"',quoting=0, index_col='DateTime')
             climatedata = pd.concat([climatedata,newfile],axis=1)
-            
+
+        ##print (climatedata)
+
         data = [tuple(zip(line[0:None:4],line[1:None:4],line[2:None:4],line[3:None:4])) for line in climatedata.values]
 
         # Get a tuple of kilometers to use as keys to the location of each climate node
@@ -563,8 +566,14 @@ class CSVInterface(object):
         for time in timelist:
             line = data.pop(0)
             c = count()
+            ##print ("sorted(self.Reach.keys()=",sorted(self.Reach.keys()))
+            ##print ("len(self.Reach.keys()=",len(self.Reach.keys()))
+            ##print (line)
             for cloud, wind, humid, air in line:
                 i = c.next()
+                print (i)
+                print ("self.Reach[kms]=",self.Reach[kms[0]],self.Reach[kms[1]])
+                print ("self.Reach[kms[i]=",self.Reach[kms[i]])
                 node = self.Reach[kms[i]] # Index by kilometer
                 # Append this node to a list of all nodes which have continuous data
                 if node.km not in self.ContDataSites:
@@ -585,6 +594,7 @@ class CSVInterface(object):
                         air = 0.0
                     else: raise Exception("Air temperature input (value of '%s' in Continuous Data) outside of world records, -89 to 58 deg C." % `air`)
                 node.ContData[time] = cloud, wind, humid, air
+                print (node.ContData[time])
             print("Reading continuous data", tm.next()+1, length)
 
         # Flush meteorology: first 24 hours repeated over flush period
@@ -769,6 +779,7 @@ class CSVInterface(object):
         num_nodes = int(ceil((vars)/self.multiple))
         for i in range(0, num_nodes):
             node = StreamNode(run_type=self.run_type,Q_mb=Q_mb)
+            print (data["km"])
             for k,v in data.iteritems():
                 setattr(node,k,v[i+1])# Add one to ignore boundary node
             self.InitializeNode(node)
@@ -801,7 +812,9 @@ class CSVInterface(object):
         keys = self.Reach.keys()
         keys.sort(reverse=True) # Downstream sorted list of stream kilometers
         print("Translating LULC Data")
-        for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data
+        print(LCdata.ix[0][0])
+        for i in xrange(6, radial_count*trans_count+7): # For each column of LULC data; orig: (6, 42)
+            #on position 6: emergent vegetation, on position 7: first LandCover Code
             col = list(LCdata.ix[:,i]) # LULC column
             elev = list(LCdata.ix[:,i+radial_count*trans_count]) # Shift by 28 to get elevation column
             # Make a list from the LC codes from the column, then send that to the multiplier
@@ -953,6 +966,7 @@ class CSVInterface(object):
         elevation = []
         average = lambda x:sum(x)/len(x)
         trans_count = IniParams["transsample_count"]
+        print (trans_count)
         if IniParams["radialsample_count"] == 999:
             radial_count = 7 # heat source 8 default
         else:

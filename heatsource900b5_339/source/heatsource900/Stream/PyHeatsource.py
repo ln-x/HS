@@ -228,7 +228,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     #======================================================
     # 1 - Above Topography
 
-    #import reference global radiation at clear sky (pot) TODO: Schoener waere es statt dem Lookup table eine Parametrisierung zu haben...
+    #import reference file at clear sky (= radiation above topography or "potential" = pot) TODO: Schoener waere es statt dem Lookup table eine Parametrisierung zu haben...
     with open('C:\\heatsource900b5_339\\pot_rows.txt', 'r') as f1:
          data1 = f1.readlines()
     f1.closed
@@ -236,18 +236,21 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     for i in data1:
         pot.append(i.split())
 
-    #print (pot)
-
+    #find zenith angle used in reference file, which is closest to actual Zenith
     zenith_pot = min(enumerate(map(float, pot[0])), key= lambda x: abs(x[1] - Zenith))
     #print (zenith_pot)
 
+    #find "potential" global radiation at zenith angle closest to actual Zenith
     F_Glo[0] = float(pot[1][zenith_pot[0]])
     #print (F_Glo[0])
 
+    #radiation above topography equals the input of the climatefiles
     F_Glo[1] = glorad
-    F_Diffuse[0] = 0
+    #print (glorad)
+
+    #ratio between actual measured and reference radiation - serves also as cloudiness value
     ratio_glopot_act = F_Glo[1]/F_Glo[0]
-    Cloud = ratio_glopot_act # erste Annaeherung
+    #Cloud = ratio_glopot_act
 
     #find to which libRadtran simulated zenith angle is the actual zenith the closest
     zenith_ref = [23.85833,28.82833,33.85333,38.8875,43.81917,48.85667,53.82417,
@@ -257,6 +260,7 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     ratio_glopot_ref = []
     ratio_dirglo = []
 
+    #import ratio between global radiation above topography at various atmosphere optical thickness and above atmosphere
     with open('C:\\heatsource900b5_339\\ratio_glopot.txt', 'r') as f1:
          data1 = f1.readlines()
     f1.closed
@@ -264,16 +268,13 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     for i in data1:
         ratio_glopot_ref.append(i.split())
 
-    #print ("ratio_glopot_ref[zenith_act[0]]=", ratio_glopot_ref[zenith_act[0]])
-    #print ("type(ratio_glopot_ref[zenith_act[0]][0])=", type(ratio_glopot_ref[zenith_act[0]][0]))
-
+    #import ratio between libRadtran simulated direct and global radiation at various atmospheric optical thicknesses
     with open ('C:\\heatsource900b5_339\\ratio_dirglo.txt', 'r') as f2:
              data2 = f2.readlines()
     f2.closed
 
     for i in data2:
         ratio_dirglo.append(i.split())
-
 
     #find to which libRadtran simulated global/potential radiation ratio is the actual measured ratio the closest
     ratio_glopot = min(enumerate(map(float,ratio_glopot_ref[zenith_act[0]])), key=lambda x: abs(x[1] - ratio_glopot_act))
@@ -282,14 +283,12 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     ratio_dirglo_act = ratio_dirglo[zenith_act[0]][ratio_glopot[0]]
 
     #Calculate Diffuse Fraction
+    F_Diffuse[0] = 0
+    F_Diffuse[1] = F_Glo[1]*(1 - float(ratio_dirglo_act))
+    F_Direct[1] = F_Glo[1]* float(ratio_dirglo_act)
 
-    F_Diffuse[0] = F_Glo[1]*(1 - float(ratio_dirglo_act))
-    F_Direct[0] = F_Glo[1]* float(ratio_dirglo_act)
-
-    print (F_Diffuse[0])
-    print (F_Direct[0])
-
-
+    #print (F_Diffuse[1])
+    #print (F_Direct[1])
 
     ########################################################
     #======================================================
@@ -419,13 +418,15 @@ def GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b, Elevation, TopoFa
     F_Solar[6] = F_Diffuse[6] + F_Direct[6]
     F_Solar[7] = F_Diffuse[7] + F_Direct[7]
 #    return cloud, F_Solar, Solar_blocked_byVeg
-    return Cloud, F_Solar, Solar_blocked_byVeg
 
-def GetGroundFluxes(Cloud, Wind, Humidity, T_Air, Elevation, phi, VHeight, ViewToSky, SedDepth, dx,
+    #print ("Cloud1=", Cloud)
+    return F_Solar, Solar_blocked_byVeg
+
+def GetGroundFluxes(Wind, Humidity, T_Air, Elevation, phi, VHeight, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv, P_w, W_w, emergent, penman, wind_a,
                     wind_b, calcevap, T_prev, T_sed, Q_hyp, F_Solar5, F_Solar7):
 
-    Cloud = 1
+    Cloud = 1 #TODO: Sollte weg, aber wenn nicht da dann Error: Sediment temperature out of bounds
     #SedThermCond units of W/(m *C)
     #SedThermDiff units of cm^2/sec
 
@@ -584,14 +585,8 @@ def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T
 
     solar = [0]*8
     veg_block = [0]*len(ShaderList[4])+[0] #plus one for diffuse blocked
-    #print ("len(veg_block)=", len(veg_block))
-    #print(veg_block)
-    #print ("len(solar)=", len(solar))
-    #print (solar)
-
     if daytime:
-        #solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, cloud, d_w, W_b,
-        Cloud,solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b,
+        solar,veg_block = GetSolarFlux(hour, JD, Altitude, Zenith, glorad, d_w, W_b,
                     Elevation, TopoFactor, ViewToSky, SampleDist, phi, emergent,
                     VDensity, VHeight, ShaderList)
 
@@ -602,8 +597,7 @@ def CalcHeatFluxes(ContData, C_args, d_w, area, P_w, W_w, U, Q_tribs, T_tribs, T
         # regular node
         else: return solar, [0]*9, 0.0, 0.0, [0]*3, veg_block
 
-    #ground = GetGroundFluxes(cloud, wind, humidity, T_air, Elevation,
-    ground = GetGroundFluxes(glorad, wind, humidity, T_air, Elevation,
+    ground = GetGroundFluxes(wind, humidity, T_air, Elevation,
                     phi, VHeight, ViewToSky, SedDepth, dx,
                     dt, SedThermCond, SedThermDiff, calcalluv, T_alluv, P_w,
                     W_w, emergent, penman, wind_a, wind_b,
